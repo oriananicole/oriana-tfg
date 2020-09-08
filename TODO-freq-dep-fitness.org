@@ -1,0 +1,147 @@
+* Miscell to-do in freq-dep-fitness branch
+
+** first
+   
+  - [X] binary files were changed: explain:
+    - [X] OncoSimulR/data/examplesFitnessEffects.RData
+    - [X] OncoSimulR/inst/testdata_fee.RData
+    - [X] miscell-files/fee.RData
+
+  - [X] test_mutator.R:
+    - line 208: is it "genotype" or "Genotype"
+
+  - [X] is stringr really needed? Leave it for now.
+  - [X] is combn needed? (see NAMESPACE). Leave it, as it is from utils.
+
+
+  - [X] update to latest version of exprTk: 
+    - http://www.partow.net/programming/exprtk/index.html
+    - https://github.com/ArashPartow/exprtk
+ 
+  - [X] why can't mutator effects be used?
+    - this is said in the vignette (I think) and in oncoSimulIndiv.Rd
+
+  - [X] clarify in both vignette and help that non-specified genotypes
+    have fitness 0
+    - a simple example in freq-depn-non-specified.R 
+
+
+  - [ ] stopping conditions: allow with detectionDrivers?
+    - [ ] in general, verify stopping: but then, no reason it shouldn't as
+      that has not been touched.
+      - Some code in fdf-stopping.
+      - [ ] add to formal tests.
+    - [ ] stop based on "stable results"?
+  - [ ] all compilation warnings: fix.
+
+  - [ ] explain in vignette why this was possible without touching OncoSimulR_init.c, RcppExports.cpp
+
+  - [ ] double check from_genot_utils.R (why?)
+
+  - [X] check under Windows: failing in appveyor. NO LONGER A PROBLEM
+    - C:/Rtools/mingw_32/bin/../lib/gcc/i686-w64-mingw32/4.9.3/../../../../i686-w64-mingw32/bin/as.exe: new_restrict.o: too many sections
+    - C:/Rtools/mingw_32/bin/../lib/gcc/i686-w64-mingw32/4.9.3/../../../../i686-w64-mingw32/bin/as.exe: new_restrict.o: too many sections (39193)
+    - solution?
+      - https://stackoverflow.com/questions/16596876/object-file-has-too-many-sections
+      - 
+         https://stackoverflow.com/questions/43306492/eigen-eigenvalues-too-many-sections-with-mingw-w64
+         [above flags might take forever?]
+      - Not possible to force -O3?
+	- https://stackoverflow.com/questions/23414448/r-makevars-file-to-overwrite-r-cmds-default-g-options
+      - https://discourse.mc-stan.org/t/too-many-sections/6261   [R specific?]
+      - ExprTk: this has been reported: https://stackoverflow.com/questions/31890021/mingw-too-many-sections-bug-while-compiling-huge-header-file-in-qt
+	- https://sourceforge.net/p/mingw-w64/discussion/723797/thread/c6b70624/
+	- https://github.com/MrKepzie/Natron/blob/master/Engine/ExprTk.cpp
+          [see lines
+	  - // exprtk requires -Wa,-mbig-obj on mingw, but there is a bug that prevents linking if not using -O3
+          - // see:
+          - // - https://sourceforge.net/p/mingw-w64/discussion/723797/thread/c6b70624/
+          - // - https://github.com/assimp/assimp/issues/177#issuecomment-217605051
+          - // - http://discourse.chaiscript.com/t/compiled-in-std-lib-with-mingw/66/2
+          ]
+      - affects other libraries too (see above last two links)
+  - [ ] check size of package with included exprTk
+  - [ ] compilation warnings for comparisons between ints, etc.
+  - [ ] why is the library under inst/miscell? Well, now under src.
+    - Also: https://stackoverflow.com/questions/51571906/which-is-the-best-way-to-develop-an-r-package-that-needs-a-heavy-c-library
+    - yes, definitely, down the road, leave under /inst/include: https://stackoverflow.com/questions/36927141/syncing-rcpp-with-external-headers-and-libraries-to-build-a-batch-geocoding-pack
+
+  - Not unlike this reported issue:
+    - https://stat.ethz.ch/pipermail/r-devel/2017-March/073846.html
+    - 
+       http://r.789695.n4.nabble.com/Seeking-advice-regarding-compilation-of-large-libraries-using-RTools-Windows-td4729418.html
+       [same thing, easier to read]
+
+*** mingw issue: using Rtools35.exe. NOT AN ISSUE ANTMORE
+    - The file to use in Windoze is, for system-wide packages,
+      C:/Users/ramon/.R/Makevars.win [nope, do not go to users/whatever/Documents]
+    - The variable is: CXX11FLAGS [using only CXXFLAGS was not overwriding
+      the -O2]
+    - Still, with only -O3 or with both -Wa,-mbig-obj -O3 I still get the
+      same problems of too many sections
+    - I try with "--no-multiarch" (R CMD INSTALL --no-multiarch) so it only tries to build the 64-bit version:
+      - Only with "-O3": fails with "too many section (52845)"
+      - Only with "-Wa,-mbig-obj":
+      - With both "-Wa,-mbig-obj -O3 -":
+	- takes more than 40 when building the dll. (empieza a las 13:25): uses
+          1 core at 99%, and uses about 140 MB RAM. Killed after 40
+          minutes.
+	- all of this has happened before fopr other packages (see above)
+	       - http://r.789695.n4.nabble.com/Seeking-advice-regarding-compilation-of-large-libraries-using-RTools-Windows-td4729418.html
+
+*** Rtools40: SOLVED
+    - Several dependencies of OncoSimulR fail: igraph, new, lme4 ,
+      pbkrtest (for car), etc.
+    - I give up after install one of the dependencies of igraph.
+    - After all, this is still using gcc from mingw32
+
+*** LLVM/clang? IS THIS RELEVANT NOW?
+    - It should work, but I do not see how to use clang in windowze.
+    - The report from ExpTrk's autho indictes he can get ExprTk to work
+      under Windowze with clang.
+      - Using clang with R: these three would seem to suggest one can use clag:
+	- http://r-pkgs.had.co.nz/src.html
+	- https://r-pkgs.org/
+	- https://teuder.github.io/rcpp4everyone_en/020_install.html
+	- But then, this says clang cannot be used:
+	  - https://groups.google.com/d/msg/stan-users/QeQaEqFqyow/5wksPBacBQAJ
+	- And I cerntainly do not seem to be able to make it work with Rtools.
+	- Of course it cannot work with clang in windoze: see, e.g.,
+          question 2.9 and 1.3 in the Rcpp-FAQ.pdf: the toolchain just
+          does not suppor it: https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf
+	  - and this: https://stackoverflow.com/a/10723987
+	  - and this:
+            https://github.com/RcppCore/Rcpp/issues/728#issuecomment-313019053
+            [yes, it is MSVC, but says gcc only]
+      
+
+**** virtualbox notes
+     - the screen size, etc: do "view full screeen mode" and then "auto
+       resize". Seems to work (?)
+
+** second
+  - [X] change frequencyType = unemployed by NULL.
+  - [X] can we mix freq. with absolute? Yes, because any frequency
+    can be expressed as a ratio of numbers.
+  - [X] death rate: cannot become smaller than initial. That would be the
+    default, basely one. Otherwise, it is not possible to get a collapse
+    here, because death rate always adjusted.
+    - In bnb_common.cpp, updateRatesFDFMcFarlandLog
+    - fixed: McFLD as another model
+  - [ ] isn't frequencyType redundant? Couldn't we guess if from "f" or
+    "n"? So no need for "frequencyType = 'rel'"
+
+
+
+** to fix. 
+  - [X] is allMutator Effects working? Nope. It doesn't
+
+** miscell
+   - Add 
+   R_forceSymbols(dll, TRUE);
+
+   in void R_init_OncoSimulR(DllInfo *info) {
+
+   in OncoSimulR_init.c
+
+   see: https://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
