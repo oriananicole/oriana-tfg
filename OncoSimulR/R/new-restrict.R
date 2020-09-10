@@ -2052,9 +2052,19 @@ nr_oncoSimul.internal <- function(rFE,
                                   detectionProb,
                                   AND_DrvProbExit,
                                   MMUEF = NULL, ## avoid partial matching, and set default
-                                  fixation = NULL ## avoid partial matching
+                                  fixation = NULL, ## avoid partial matching
+                                  initMutantPercentage,
+                                  cteSize,
+                                  migrationProb,
+                                  largeDistanceMigrationProb,
+                                  maxMigrationPercentage,
+                                  spatialModel,
+                                  spatialDemesMax,
+                                  spatialIterMax,
+                                  spatialKeepEvery,
+                                  spatialVerbosity,
+                                  spatialDeleteDemesWithoutMutations
                                   ) {
-
     default_min_successive_fixation <- 50 ## yes, set at this for now
 
     if(!inherits(rFE, "fitnessEffects"))
