@@ -2065,7 +2065,6 @@ nr_oncoSimul.internal <- function(rFE,
                                   spatialVerbosity,
                                   spatialDeleteDemesWithoutMutations
                                   ) {
-
     default_min_successive_fixation <- 50 ## yes, set at this for now
 
     if(!inherits(rFE, "fitnessEffects"))
