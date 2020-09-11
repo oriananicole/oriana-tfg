@@ -2210,6 +2210,10 @@ nr_oncoSimul.internal <- function(rFE,
         full2mutator_ <- vector(mode = "numeric", length = 0)
         ## muEF <- emptyFitnessEffects()
     }
+    
+    # Calculo del fitness maximo, utilizado para typeModelConstante
+    auxF <- evalAllGenotypes(rFE, order = FALSE)
+    maxFitness <- max(auxF$Fitness)
 
     dpr <- detectionProbCheckParse(detectionProb, initSize, verbosity)
     ## if( !is.null(cPDetect) && (sum(!is.null(p2), !is.null(n2)) >= 1 ))

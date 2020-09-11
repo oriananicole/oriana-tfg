@@ -769,7 +769,7 @@ oncoSimulIndiv <- function(fp,
     }
 
     # SPATIAL MODEL OUTPUT
-    if(spatialModel){
+    if(spatialModel == TRUE){
         op$Drivers <- NULL
         if((op$Simulation$KeepEveryIters == 1) && (op$TotalPopulation == 0)){
             op$Simulation$Data <- NULL   
