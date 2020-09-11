@@ -2052,7 +2052,18 @@ nr_oncoSimul.internal <- function(rFE,
                                   detectionProb,
                                   AND_DrvProbExit,
                                   MMUEF = NULL, ## avoid partial matching, and set default
-                                  fixation = NULL ## avoid partial matching
+                                  fixation = NULL, ## avoid partial matching
+                                  initMutantPercentage,
+                                  cteSize,
+                                  migrationProb,
+                                  largeDistanceMigrationProb,
+                                  maxMigrationPercentage,
+                                  spatialModel,
+                                  spatialDemesMax,
+                                  spatialIterMax,
+                                  spatialKeepEvery,
+                                  spatialVerbosity,
+                                  spatialDeleteDemesWithoutMutations
                                   ) {
 
     default_min_successive_fixation <- 50 ## yes, set at this for now
@@ -2342,7 +2353,7 @@ nr_oncoSimul.internal <- function(rFE,
                      cPDetect_i= dpr["cPDetect"],
                      checkSizePEvery = dpr["checkSizePEvery"],
                      AND_DrvProbExit = AND_DrvProbExit,
-                     fixation_list = fixation_list),
+                     fixation_list = fixation_list,
                      maxFitness = maxFitness,
                      initMutantPercentage = initMutantPercentage,
                      cteSize = cteSize,
