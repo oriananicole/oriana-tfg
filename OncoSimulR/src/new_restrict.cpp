@@ -1448,7 +1448,7 @@ std::vector<double> evalGenotypeFitness(const Genotype& ge,
 
 	if( ((ge.orderEff.size() + ge.epistRtEff.size() +
        ge.rest.size() + ge.flGenes.size() ) == 0) && !F.frequencyDependentFitness ) {
-    Rcpp::warning("WARNING: you have evaluated fitness of a genotype of length zero.");
+    //Rcpp::warning("WARNING: you have evaluated fitness of a genotype of length zero.");
     // s.push_back(1.0); //Eh??!! 1? or 0? FIXME It should be empty! and have prodFitness
     // deal with it.
     return s;
