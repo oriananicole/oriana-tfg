@@ -2019,7 +2019,6 @@ plot.fitnessEffects <- function(x, type = "graphNEL",
 ## interactions.
 
 
-
 nr_oncoSimul.internal <- function(rFE,
                                   birth,
                                   death,
@@ -2064,7 +2063,8 @@ nr_oncoSimul.internal <- function(rFE,
                                   spatialKeepEvery,
                                   spatialVerbosity,
                                   spatialDeleteDemesWithoutMutations
-                                  ) {
+                                  ) {    
+
     default_min_successive_fixation <- 50 ## yes, set at this for now
 
     if(!inherits(rFE, "fitnessEffects"))
@@ -2210,10 +2210,11 @@ nr_oncoSimul.internal <- function(rFE,
         full2mutator_ <- vector(mode = "numeric", length = 0)
         ## muEF <- emptyFitnessEffects()
     }
-    
+
     # Calculo del fitness maximo, utilizado para typeModelConstante
     auxF <- evalAllGenotypes(rFE, order = FALSE)
     maxFitness <- max(auxF$Fitness)
+
 
     dpr <- detectionProbCheckParse(detectionProb, initSize, verbosity)
     ## if( !is.null(cPDetect) && (sum(!is.null(p2), !is.null(n2)) >= 1 ))
